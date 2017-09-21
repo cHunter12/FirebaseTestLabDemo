@@ -19,8 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.*;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -29,21 +27,25 @@ import dagger.Component;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
-    @Inject
-    Clock mClock;
-
-    @Singleton
-    @Component(modules = MockClockModule.class)
-    public interface TestComponent extends DemoComponent {
-
-        void inject(MainActivityTest mainActivityTest);
-    }
-
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<MainActivity>(
             MainActivity.class,
             true,
             false);
+    @Inject
+    Clock mClock;
+
+    @Test
+    public void intent() {
+        DateTime dateTime = new DateTime(2014, 10, 15, 0, 0, 0);
+        Intent intent = new Intent();
+        intent.putExtra(MainActivity.KEY_MILLIS, dateTime.getMillis());
+
+        mActivityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.date))
+                .check(matches(withText("2014-10-15")));
+    }
 
     @Before
     public void setUp() {
@@ -63,15 +65,10 @@ public class MainActivityTest {
                 .check(matches(withText("2008-09-23")));
     }
 
-    @Test
-    public void intent() {
-        DateTime dateTime = new DateTime(2014, 10, 15, 0, 0 ,0);
-        Intent intent = new Intent();
-        intent.putExtra(MainActivity.KEY_MILLIS, dateTime.getMillis());
+    @Singleton
+    @Component(modules = MockClockModule.class)
+    public interface TestComponent extends DemoComponent {
 
-        mActivityTestRule.launchActivity(intent);
-
-        onView(withId(R.id.date))
-                .check(matches(withText("2014-10-15")));
+        void inject(MainActivityTest mainActivityTest);
     }
 }
