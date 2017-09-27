@@ -4,16 +4,18 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
+
+import static org.hamcrest.core.IsNot.not;
 
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.linkedin.android.testbutler.TestButler;
 
+import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,6 +48,7 @@ public class MainActivityTest {
         mActivityTestRule.launchActivity(intent);
 
         onView(withId(R.id.date))
+                .inRoot(withDecorView(not(Matchers.is(mActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(withText("2014-10-15")));
     }
 
@@ -64,6 +67,7 @@ public class MainActivityTest {
         mActivityTestRule.launchActivity(new Intent());
 
         onView(withId(R.id.date))
+                .inRoot(withDecorView(not(Matchers.is(mActivityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(withText("2008-09-23")));
     }
 
