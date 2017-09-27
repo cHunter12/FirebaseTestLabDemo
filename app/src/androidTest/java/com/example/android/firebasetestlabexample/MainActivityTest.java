@@ -46,7 +46,6 @@ public class MainActivityTest {
         mActivityTestRule.launchActivity(intent);
 
         onView(withId(R.id.date))
-                .inRoot(isFocusable())
                 .check(matches(withText("2014-10-15")));
     }
 
@@ -65,7 +64,6 @@ public class MainActivityTest {
         mActivityTestRule.launchActivity(new Intent());
 
         onView(withId(R.id.date))
-                .inRoot(isFocusable())
                 .check(matches(withText("2008-09-23")));
     }
 
